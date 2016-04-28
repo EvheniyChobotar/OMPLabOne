@@ -1,43 +1,58 @@
 package mainPack;
 
-
-import javax.swing.JFrame;
+import java.awt.Color;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.ApplicationFrame;
 
-public class DrawGraphic
+public class DrawGraphic extends ApplicationFrame 
 {
-   
-        
-    void Draw()
+    public DrawGraphic(String title) 
     {
+        super(title);
+        JFreeChart xylineChart = ChartFactory.createXYLineChart(  "Графік" ,
+                                                                  "Розмір вхідних даних" ,
+                                                                  "Час" ,
+                                                                  createDataset() ,
+                                                                  PlotOrientation.VERTICAL ,
+                                                                  true , true , false);
         
-        XYSeries    series  = new XYSeries("OPMLab");
-        JFrame      frame   = new JFrame("OMPLabOne");
-        frame.setSize(1300,750);
+        ChartPanel chartPanel = new ChartPanel(xylineChart);
+        chartPanel.setPreferredSize( new java.awt.Dimension(1200, 700));
+        final XYPlot plot = xylineChart.getXYPlot();
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesPaint( 0 , Color.RED );
+       // renderer.setSeriesPaint( 1 , Color.GREEN );
+        plot.setRenderer(renderer); 
+        setContentPane(chartPanel); 
         
-        for(int i=0;i<Main.dimensionList.size()-1;i++)
-        {
-            series.add((int)Main.dimensionList.get(i),Main.timeList.get(i+1)-Main.timeList.get(i));   
-        }
-        
-        XYDataset xyDataset = new XYSeriesCollection(series);
-        
-        JFreeChart chart    = ChartFactory.createXYLineChart(  "График", "размер входньіх данньіх",  "ускорение",
-                                                            xyDataset, 
-                                                            PlotOrientation.VERTICAL,
-                                                            true, true, true);
-        
-        frame.getContentPane().add(new ChartPanel(chart));
-        
-        frame.show();   
-       
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+    
+    private XYDataset createDataset()
+    {
+        XYSeries parallelGraphic = new XYSeries("Паралельно");  
+        XYSeries sequentialGraphic = new XYSeries("Послідовно");
+        XYSeries boost = new XYSeries("Прискорення");
+        
+        for(int i=0;i<Main.dimensionList.size();i++)
+        {
+            System.out.println("Пар"+Main.parellelTimeList.get(i)+"\nПосл"+Main.sequentialTimeList.get(i)+"\n");
+            parallelGraphic.add((int)Main.dimensionList.get(i),Main.parellelTimeList.get(i));
+            sequentialGraphic.add((int)Main.dimensionList.get(i),Main.sequentialTimeList.get(i));
+            boost.add((int)Main.dimensionList.get(i),(Main.sequentialTimeList.get(i)/Main.parellelTimeList.get(i)));
+        }
+        final XYSeriesCollection dataset = new XYSeriesCollection( );
+        //dataset.addSeries(parallelGraphic);  
+        //dataset.addSeries(sequentialGraphic);
+        dataset.addSeries(boost);
+        return dataset;
 
+    }
 }

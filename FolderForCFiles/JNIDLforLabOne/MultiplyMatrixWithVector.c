@@ -2,28 +2,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <omp.h>
-#include "JNIHeaderFileforLabOne.h"
+#include "JNIHeaderforLabOne.h"
 
 void    Initialization();
 void    TestCorrectInitialization();
-void    Print();
 double  ParallelCalculate();
+double  SequentialCalculte();
 void    FreeMemory();
 
 double  **A, *B, *C, SUM,   
            t_start, t_end;
 long N;
 
-JNIEXPORT jdouble JNICALL Java_mainPack_Main_nativeMultiplyMatrixWithVector(JNIEnv *env, jobject obj1, jint Dimension)
+JNIEXPORT jdouble JNICALL Java_mainPack_Main_nativeParallelMultiplyMatrixWithVector(JNIEnv *env, jobject obj1, jint Dimension)
 {
     N = Dimension;
-    
     Initialization(); 
-    
     TestCorrectInitialization();
-    
     double time = ParallelCalculate(); 
-    printf("%f\n",time);
+    FreeMemory();    
+    return time;
+}
+
+JNIEXPORT jdouble JNICALL Java_mainPack_Main_nativeSequentialMultiplyMatrixWithVector(JNIEnv *env, jobject obj1, jint Dimension)
+{
+    N = Dimension;
+    Initialization(); 
+    TestCorrectInitialization();
+    double time = SequentialCalculte();
     FreeMemory();    
     return time;
 }
@@ -62,31 +68,30 @@ void TestCorrectInitialization()
     }
 }
 
-void Print()
-{
-    int i,j;
-    printf("\nMatrix A: \n");
-    for (i = 0; i < N; i++){
-        printf("\n");
-        for (j = 0; j < N; j++)
-            printf("%f ",A[i][j]);
-    }
-
-    printf("\nVector B:\n");
-    for (i = 0; i < N; i++){
-        printf("%f \n", B[i]);
-       
-     }
-}
-
 double  ParallelCalculate()
 {
-    omp_set_num_threads(2);
+    omp_set_num_threads(4);
     int i,j;
     t_start = omp_get_wtime();   
     
 #pragma omp parallel for default(none) shared(A, B, C, N)  private(i, j, SUM)
    
+    for (i=0; i < N; i++) {
+        SUM = 0.0;
+        for(j=0; j < N; j++)
+            SUM += A[i][j] * B[j];
+        C[i] = SUM;
+    }
+    t_end = omp_get_wtime();
+    
+    return t_end - t_start;
+}
+
+double SequentialCalculte()
+{
+    int i,j;
+    t_start = omp_get_wtime();   
+    
     for (i=0; i < N; i++) {
         SUM = 0.0;
         for(j=0; j < N; j++)

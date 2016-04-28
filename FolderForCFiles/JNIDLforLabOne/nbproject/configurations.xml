@@ -4,7 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>/home/eugenej/NetBeansProjects/OMPLabOne/FolderForCFiles/JNIDLforLabOne/JNIHeaderFileforLabOne.h</itemPath>
+      <itemPath>/home/eugenej/NetBeansProjects/OMPLabOne/FolderForCFiles/JNIDLforLabOne/JNIHeaderforLabOne.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -50,7 +50,7 @@
           <output>dist/libJNIforLabOne.so</output>
         </linkerTool>
       </compileType>
-      <item path="/home/eugenej/NetBeansProjects/OMPLabOne/FolderForCFiles/JNIDLforLabOne/JNIHeaderFileforLabOne.h"
+      <item path="/home/eugenej/NetBeansProjects/OMPLabOne/FolderForCFiles/JNIDLforLabOne/JNIHeaderforLabOne.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -81,7 +81,7 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="/home/eugenej/NetBeansProjects/OMPLabOne/FolderForCFiles/JNIDLforLabOne/JNIHeaderFileforLabOne.h"
+      <item path="/home/eugenej/NetBeansProjects/OMPLabOne/FolderForCFiles/JNIDLforLabOne/JNIHeaderforLabOne.h"
             ex="false"
             tool="3"
             flavor2="0">
